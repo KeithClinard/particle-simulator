@@ -1,9 +1,11 @@
 import Particle from "./Particle";
+import Constants from "./Constants";
 
 export default class ParticleContainer {
   constructor() {
-    this.container = new PIXI.particles.ParticleContainer(100000);
+    this.container = new PIXI.particles.ParticleContainer(Constants.maxParticles);
     this.particles = [];
+    this.newParticles = [];
     window.app.stage.addChild(this.container);
     this.generateGlobalTexture();
     window.particleContainer = this;
@@ -11,15 +13,9 @@ export default class ParticleContainer {
 
   generateGlobalTexture() {
     const graphic = new PIXI.Graphics();
-    const baseSize = 10;
-    const adjustedSize = this.nearestPow2(baseSize / 2);
     graphic.beginFill(0xffffff);
-    graphic.drawCircle(0, 0, adjustedSize);
+    graphic.drawCircle(0, 0, Constants.initialParticleSize);
     this.texture = window.app.renderer.generateTexture(graphic);
-  }
-
-  nearestPow2(n) {
-    return 1 << (31 - Math.clz32(n));
   }
 
   mergeParticles(p1, p2) {
@@ -34,10 +30,9 @@ export default class ParticleContainer {
   }
 
   makeParticle(x, y, velX, velY, mass) {
-    mass = mass || 100;
+    mass = mass || Constants.particleDefaultMass;
     const particle = new Particle(mass, false, x, y, velX, velY, this.texture);
-    this.container.addChild(particle.sprite);
-    this.particles.push(particle);
+    this.newParticles.push(particle);
   }
 
   removeCollided() {
@@ -48,5 +43,12 @@ export default class ParticleContainer {
       }
       return true;
     });
+  }
+  addCreated() {
+    for (const particle of this.newParticles) {
+      this.particles.push(particle);
+      this.container.addChild(particle.sprite);
+    }
+    this.newParticles = [];
   }
 }

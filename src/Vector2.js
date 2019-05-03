@@ -73,6 +73,10 @@ export default class Vector2 {
     return new Vector2(x, y);
   }
 
+  setMagnitude(magnitude) {
+    return this.normalize().multiplyScalar(magnitude);
+  }
+
   /*
    *	In-place Vector Math
    */
@@ -124,6 +128,11 @@ export default class Vector2 {
   normalizeInplace() {
     this.x = this.x / this.getMagnitude();
     this.y = this.y / this.getMagnitude();
+  }
+
+  setMagnitudeInplace(magnitude) {
+    this.normalizeInplace();
+    this.multiplyScalarInplace(magnitude);
   }
 
   /*
