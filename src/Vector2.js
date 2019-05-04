@@ -3,8 +3,8 @@ export default class Vector2 {
     this.x = x || 0;
     this.y = y || 0;
   }
-  
-  static fromAngle(angle, magnitude) {
+
+  static createFromAngle(angle, magnitude) {
     return new Vector2(
       magnitude * Math.cos(angle),
       magnitude * Math.sin(angle)

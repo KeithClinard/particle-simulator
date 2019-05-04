@@ -3,7 +3,9 @@ import Constants from "./Constants";
 
 export default class ParticleContainer {
   constructor() {
-    this.container = new PIXI.particles.ParticleContainer(Constants.maxParticles);
+    this.container = new PIXI.particles.ParticleContainer(
+      Constants.maxParticles
+    );
     this.particles = [];
     this.newParticles = [];
     window.app.stage.addChild(this.container);

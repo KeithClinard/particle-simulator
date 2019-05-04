@@ -6,7 +6,10 @@ export default class Engine {
     const particles = window.particleContainer.particles;
     for (const particle of particles) {
       for (const secondParticle of particles) {
-        const validInteraction = particle !== secondParticle && !particle.collided && !secondParticle.collided;
+        const validInteraction =
+          particle !== secondParticle &&
+          !particle.collided &&
+          !secondParticle.collided;
         if (!validInteraction) {
           continue;
         }
@@ -30,7 +33,10 @@ export default class Engine {
       const accelerationSum = new Vector2();
 
       for (const secondParticle of particles) {
-        const validInteraction = particle !== secondParticle && !particle.collided && !secondParticle.collided;
+        const validInteraction =
+          particle !== secondParticle &&
+          !particle.collided &&
+          !secondParticle.collided;
         if (!validInteraction) {
           continue;
         }
@@ -39,9 +45,11 @@ export default class Engine {
         );
         const displacementDirection = displacementVector.normalize();
         const displacement = displacementVector.getMagnitude();
-        const canGravitate = particle.affectedByGravity && secondParticle.generateGravity;
+        const canGravitate =
+          particle.affectedByGravity && secondParticle.generateGravity;
         if (canGravitate) {
-          const acceleration = secondParticle.mass / (displacement * displacement);
+          const acceleration =
+            secondParticle.mass / (displacement * displacement);
           accelerationSum.addInplace(
             displacementDirection.multiplyScalar(acceleration)
           );
@@ -51,34 +59,34 @@ export default class Engine {
     }
   }
 
-  static updatePositions(delta){
-    const particles = window.particleContainer.particles;    
+  static updatePositions(delta) {
+    const particles = window.particleContainer.particles;
     for (const particle of particles) {
       particle.update(delta);
     }
   }
 
-  static markOutOfBounds(){
-    const particles = window.particleContainer.particles;  
+  static markOutOfBounds() {
+    const particles = window.particleContainer.particles;
     const cleanupWidth = Constants.screenBorderCleanupRadius;
     for (const particle of particles) {
-      const outLeft = (particle.position.x < (0 - cleanupWidth));
-      const outRight = (particle.position.x > (window.innerWidth + cleanupWidth));
-      const outBottom = (particle.position.y < (0 - cleanupWidth));
-      const outTop = (particle.position.y > (window.innerHeight + cleanupWidth));
+      const outLeft = particle.position.x < 0 - cleanupWidth;
+      const outRight = particle.position.x > window.innerWidth + cleanupWidth;
+      const outBottom = particle.position.y < 0 - cleanupWidth;
+      const outTop = particle.position.y > window.innerHeight + cleanupWidth;
       const escaped = outLeft || outRight || outBottom || outTop;
 
       if (escaped) {
-          particle.collided = true;
+        particle.collided = true;
       }
     }
   }
-  
-  static removeCollided(){
+
+  static removeCollided() {
     window.particleContainer.removeCollided();
   }
 
-  static addCreated(){
+  static addCreated() {
     window.particleContainer.addCreated();
   }
 }

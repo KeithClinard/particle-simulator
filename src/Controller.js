@@ -6,13 +6,11 @@ export default class Controller {
     interaction.on("mousedown", this.startClick);
     interaction.on("mouseup", this.endClick);
     interaction.on("mouseleave", this.cancelClick);
-    interaction.on("mousemove", this.mouseMove);
 
     interaction.on("touchstart", this.startClick);
     interaction.on("touchend", this.endClick);
     interaction.on("touchcancel", this.cancelClick);
     interaction.on("touchleave", this.cancelClick);
-    interaction.on("touchmove", this.mouseMove);
     window.controller = this;
   }
 
@@ -26,10 +24,17 @@ export default class Controller {
   endClick(evt) {
     evt.stopPropagation();
     if (!this.mouseDown) {
-        return;
+      return;
     }
     if (evt.data.button == 0) {
-        window.particleContainer.makeParticle(this.downPositionX, this.downPositionY, (evt.data.global.x - this.downPositionX) * Constants.initialVelocityCoefficient, (evt.data.global.y - this.downPositionY) * Constants.initialVelocityCoefficient);
+      window.particleContainer.makeParticle(
+        this.downPositionX,
+        this.downPositionY,
+        (evt.data.global.x - this.downPositionX) *
+          Constants.initialVelocityCoefficient,
+        (evt.data.global.y - this.downPositionY) *
+          Constants.initialVelocityCoefficient
+      );
     }
 
     if (evt.data.button == 1) {
@@ -42,14 +47,15 @@ export default class Controller {
     this.mouseDown = false;
   }
 
-  mouseMove(evt) {
-    evt.stopPropagation();
-    // ?
-  }
-  
   generateSystem(centerX, centerY) {
-    window.particleContainer.makeParticle(centerX, centerY, 0, 0, Constants.systemCenterMass);
-    
+    window.particleContainer.makeParticle(
+      centerX,
+      centerY,
+      0,
+      0,
+      Constants.systemCenterMass
+    );
+
     let radius = Constants.systemCenterToDiskDistance;
     for (let i = 1; i < Constants.systemDiskParticleCount; i++) {
       radius += Constants.systemDiskParticleDistance;
@@ -58,11 +64,19 @@ export default class Controller {
       const angle = Math.random() * 2 * Math.PI;
       const positionX = radius * Math.cos(angle) + centerX;
       const positionY = radius * Math.sin(angle) + centerY;
-      const velocityOrbital = Math.sqrt((Constants.systemCenterMass + mass) / radius);
+      const velocityOrbital = Math.sqrt(
+        (Constants.systemCenterMass + mass) / radius
+      );
       const velocityX = (0 - velocityOrbital) * Math.sin(angle);
       const velocityY = velocityOrbital * Math.cos(angle);
 
-      window.particleContainer.makeParticle(positionX, positionY, velocityX, velocityY, mass);
+      window.particleContainer.makeParticle(
+        positionX,
+        positionY,
+        velocityX,
+        velocityY,
+        mass
+      );
     }
   }
 }
