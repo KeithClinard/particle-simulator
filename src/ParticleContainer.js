@@ -16,7 +16,7 @@ export default class ParticleContainer {
   generateGlobalTexture() {
     const graphic = new PIXI.Graphics();
     graphic.beginFill(0xffffff);
-    graphic.drawCircle(0, 0, Constants.initialParticleSize);
+    graphic.drawCircle(0, 0, Constants.particleTextureSize / 2);
     this.texture = window.app.renderer.generateTexture(graphic);
   }
 

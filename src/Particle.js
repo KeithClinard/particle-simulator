@@ -23,13 +23,27 @@ export default class Particle {
       this.generateGravity = false;
     }
 
-    const sprite = new PIXI.Sprite(texture);
-    sprite.width = Constants.initialParticleSize;
-    sprite.height = Constants.initialParticleSize;
+    this.sprite = new PIXI.Sprite(texture);
+
     this.position = new Vector2(positionX, positionY);
     this.velocity = new Vector2(velocityX, velocityY);
     this.acceleration = new Vector2(0, 0);
 
+    this.tintParticle();
+    this.scaleParticle();
+
+    this.update(0);
+  }
+
+  decToHex2(dec) {
+    let hex = Number(dec).toString(16);
+    if (hex.length < 2) {
+      hex = "0" + hex;
+    }
+    return hex;
+  }
+
+  tintParticle(){    
     const red = this.decToHex2(255);
     const green = this.decToHex2(
       Math.floor(
@@ -41,24 +55,26 @@ export default class Particle {
         255 / (1 + Math.pow(this.mass / Constants.particleBlueChannelMax, 1))
       )
     );
-    sprite.tint = parseInt("0x" + red + green + blue);
-
-    const mass_scale = Math.log(
-      Math.E + this.mass / Constants.particleScaleCoefficient
-    );
-    this.radius = mass_scale;
-    sprite.scale.set(mass_scale);
-
-    this.sprite = sprite;
-    this.update(0);
+    this.sprite.tint = parseInt("0x" + red + green + blue);
   }
 
-  decToHex2(dec) {
-    let hex = Number(dec).toString(16);
-    if (hex.length < 2) {
-      hex = "0" + hex;
-    }
-    return hex;
+  scaleParticle(){
+    const maxParticleScaleMass = Constants.particleDefaultMass * Constants.particleScaleCoefficient;
+    const minParticleScaleMass = Constants.particleDefaultMass;
+    const particleMassDiff = maxParticleScaleMass - minParticleScaleMass;
+    const scalableMass = this.mass > maxParticleScaleMass ? maxParticleScaleMass : this.mass;
+    const baseScale = ((scalableMass - minParticleScaleMass) / particleMassDiff);
+
+    // Calculate Radius
+    const pixelSizeDiff = Constants.maxParticleSize - Constants.minParticleSize;
+    const particleSize = (baseScale * pixelSizeDiff) + Constants.minParticleSize;
+    this.radius = particleSize / 2;
+    
+    // Calculate Texture Scale
+    const minTextureScale = Constants.minParticleSize / Constants.particleTextureSize;
+    const maxTextureScale = Constants.maxParticleSize / Constants.particleTextureSize;
+    const textureScale = baseScale * (maxTextureScale - minTextureScale) + minTextureScale;
+    this.sprite.scale.set(textureScale);
   }
 
   update(delta) {
