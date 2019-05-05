@@ -24,7 +24,7 @@ export default class Particle {
     }
 
     this.sprite = new PIXI.Sprite(texture);
-
+    this.sprite.anchor.set(0.5);
     this.position = new Vector2(positionX, positionY);
     this.velocity = new Vector2(velocityX, velocityY);
     this.acceleration = new Vector2(0, 0);
