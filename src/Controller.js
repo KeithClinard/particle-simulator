@@ -83,7 +83,8 @@ export default class Controller {
         positionY,
         velocityX,
         velocityY,
-        mass
+        mass,
+        true
       );
     }
   }
