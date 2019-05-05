@@ -1,10 +1,13 @@
 import Constants from "./Constants";
+import Engine from "./Engine";
 
 export default class Controller {
   constructor() {
     const interaction = window.app.renderer.plugins.interaction;
     interaction.on("mousedown", this.startClick);
     interaction.on("mouseup", this.endClick);
+    interaction.on("rightdown", this.startClick);
+    interaction.on("rightup", this.endClick);
     interaction.on("mouseleave", this.cancelClick);
 
     interaction.on("touchstart", this.startClick);
@@ -30,6 +33,7 @@ export default class Controller {
     if (!this.mouseDown) {
       return;
     }
+    // Left Click
     if (evt.data.button == 0) {
       window.particleContainer.makeParticle(
         this.downPositionX,
@@ -41,8 +45,15 @@ export default class Controller {
       );
     }
 
+    // Middle Click
     if (evt.data.button == 1) {
-      window.controller.generateSystem(evt.data.global.x, evt.data.global.y);
+      // Disabled for now
+      // window.controller.generateSystem(evt.data.global.x, evt.data.global.y, false);
+    }
+
+    // Right Click
+    if (evt.data.button == 2) {
+      window.controller.generateSystem(evt.data.global.x, evt.data.global.y, true);
     }
   }
 
@@ -55,7 +66,7 @@ export default class Controller {
     window.app.renderer.resize(window.innerWidth, window.innerHeight);
   }
 
-  generateSystem(centerX, centerY) {
+  generateSystem(centerX, centerY, useSmoke) {
     window.particleContainer.makeParticle(
       centerX,
       centerY,
@@ -72,9 +83,7 @@ export default class Controller {
       const angle = Math.random() * 2 * Math.PI;
       const positionX = radius * Math.cos(angle) + centerX;
       const positionY = radius * Math.sin(angle) + centerY;
-      const velocityOrbital = Math.sqrt(
-        (Constants.systemCenterMass + mass) / radius
-      );
+      const velocityOrbital = Engine.calculateOrbitalVelocity(Constants.systemCenterMass, radius);
       const velocityX = (0 - velocityOrbital) * Math.sin(angle);
       const velocityY = velocityOrbital * Math.cos(angle);
 
@@ -84,7 +93,7 @@ export default class Controller {
         velocityX,
         velocityY,
         mass,
-        true
+        useSmoke
       );
     }
   }
