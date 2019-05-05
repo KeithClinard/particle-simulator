@@ -31,9 +31,9 @@ export default class ParticleContainer {
     this.makeParticle(posX, posY, velX, velY, sumMass);
   }
 
-  makeParticle(x, y, velX, velY, mass) {
+  makeParticle(x, y, velX, velY, mass, isSmoke) {
     mass = mass || Constants.particleDefaultMass;
-    const particle = new Particle(mass, false, x, y, velX, velY, this.texture);
+    const particle = new Particle(mass, isSmoke, x, y, velX, velY, this.texture);
     this.newParticles.push(particle);
   }
 
