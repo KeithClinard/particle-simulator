@@ -1,5 +1,6 @@
 import Constants from "./Constants";
 import Engine from "./Engine";
+import Vector2 from "./Vector2";
 
 export default class Controller {
   constructor() {
@@ -23,8 +24,7 @@ export default class Controller {
 
   startClick(evt) {
     evt.stopPropagation();
-    this.downPositionX = evt.data.global.x;
-    this.downPositionY = evt.data.global.y;
+    this.downPosition = window.controller.getClickPosition(evt);
     this.mouseDown = true;
   }
 
@@ -35,26 +35,32 @@ export default class Controller {
     }
     // Left Click
     if (evt.data.button == 0) {
-      window.particleContainer.makeParticle(
-        this.downPositionX,
-        this.downPositionY,
-        (evt.data.global.x - this.downPositionX) *
-          Constants.initialVelocityCoefficient,
-        (evt.data.global.y - this.downPositionY) *
-          Constants.initialVelocityCoefficient
+      const clickDisplacement = window.controller
+        .getClickPosition(evt)
+        .subtract(this.downPosition);
+      const velocity = clickDisplacement.multiplyScalar(
+        Constants.initialVelocityCoefficient
       );
+      window.particleContainer.makeParticle(this.downPosition, velocity);
     }
 
     // Middle Click
     if (evt.data.button == 1) {
       // Disabled for now
-      // window.controller.generateSystem(evt.data.global.x, evt.data.global.y, false);
+      // window.controller.generateSystem(window.controller.getClickPosition(evt), false);
     }
 
     // Right Click
     if (evt.data.button == 2) {
-      window.controller.generateSystem(evt.data.global.x, evt.data.global.y, true);
+      window.controller.generateSystem(
+        window.controller.getClickPosition(evt),
+        true
+      );
     }
+  }
+
+  getClickPosition(evt) {
+    return new Vector2(evt.data.global.x, evt.data.global.y);
   }
 
   cancelClick(evt) {
@@ -66,12 +72,10 @@ export default class Controller {
     window.app.renderer.resize(window.innerWidth, window.innerHeight);
   }
 
-  generateSystem(centerX, centerY, useSmoke) {
+  generateSystem(centerPosition, useSmoke) {
     window.particleContainer.makeParticle(
-      centerX,
-      centerY,
-      0,
-      0,
+      centerPosition,
+      new Vector2(0, 0),
       Constants.systemCenterMass
     );
 
@@ -81,20 +85,15 @@ export default class Controller {
 
       const mass = Constants.systemParticleMass;
       const angle = Math.random() * 2 * Math.PI;
-      const positionX = radius * Math.cos(angle) + centerX;
-      const positionY = radius * Math.sin(angle) + centerY;
-      const velocityOrbital = Engine.calculateOrbitalVelocity(Constants.systemCenterMass, radius);
-      const velocityX = (0 - velocityOrbital) * Math.sin(angle);
-      const velocityY = velocityOrbital * Math.cos(angle);
-
-      window.particleContainer.makeParticle(
-        positionX,
-        positionY,
-        velocityX,
-        velocityY,
-        mass,
-        useSmoke
+      const positionFromCenter = Vector2.createFromAngle(angle, radius);
+      const position = positionFromCenter.add(centerPosition);
+      const velocityOrbital = Engine.calculateOrbitalVelocity(
+        Constants.systemCenterMass,
+        radius
       );
+      const velocity = Vector2.createFromOrthogonal(angle, velocityOrbital);
+
+      window.particleContainer.makeParticle(position, velocity, mass, useSmoke);
     }
   }
 }

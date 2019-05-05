@@ -24,16 +24,24 @@ export default class ParticleContainer {
     p1.collided = true;
     p2.collided = true;
     const sumMass = p1.mass + p2.mass;
-    const velX = (p1.velocity.x * p1.mass + p2.velocity.x * p2.mass) / sumMass;
-    const velY = (p1.velocity.y * p1.mass + p2.velocity.y * p2.mass) / sumMass;
-    const posX = (p1.position.x * p1.mass + p2.position.x * p2.mass) / sumMass;
-    const posY = (p1.position.y * p1.mass + p2.position.y * p2.mass) / sumMass;
-    this.makeParticle(posX, posY, velX, velY, sumMass);
+    const velocity = p1.weightedVelocity
+      .add(p2.weightedVelocity)
+      .divideScalar(sumMass);
+    const position = p1.weightedPosition
+      .add(p2.weightedPosition)
+      .divideScalar(sumMass);
+    this.makeParticle(position, velocity, sumMass);
   }
 
-  makeParticle(x, y, velX, velY, mass, isSmoke) {
+  makeParticle(position, velocity, mass, isSmoke) {
     mass = mass || Constants.particleDefaultMass;
-    const particle = new Particle(mass, isSmoke, x, y, velX, velY, this.texture);
+    const particle = new Particle(
+      mass,
+      isSmoke,
+      position,
+      velocity,
+      this.texture
+    );
     this.newParticles.push(particle);
   }
 
