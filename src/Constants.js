@@ -13,5 +13,4 @@ export default {
   systemCenterMass: 100000,
   systemParticleMass: 100,
   screenBorderCleanupRadius: 200, // Pixels
-  canvasSize: 800 // Pixels
 };
