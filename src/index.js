@@ -6,9 +6,8 @@ import Constants from "./Constants";
 
 function startApp() {
   const app = new PIXI.Application({
-    width: Constants.canvasSize,
-    height: Constants.canvasSize,
     backgroundColor: 0x000000,
+    autoResize: true,
     resolution: window.devicePixelRatio || 1
   });
   document.body.appendChild(app.view);

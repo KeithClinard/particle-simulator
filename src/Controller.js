@@ -11,6 +11,10 @@ export default class Controller {
     interaction.on("touchend", this.endClick);
     interaction.on("touchcancel", this.cancelClick);
     interaction.on("touchleave", this.cancelClick);
+
+    window.addEventListener("resize", this.resize);
+    this.resize();
+
     window.controller = this;
   }
 
@@ -45,6 +49,10 @@ export default class Controller {
   cancelClick(evt) {
     evt.stopPropagation();
     this.mouseDown = false;
+  }
+
+  resize() {
+    window.app.renderer.resize(window.innerWidth, window.innerHeight);
   }
 
   generateSystem(centerX, centerY) {
