@@ -9,10 +9,10 @@ export default {
   particleTextureSize: 1024, // Should be power of 2
   particleDefaultMass: 100,
   maxParticles: 100000,
-  systemDiskParticleCount: 100,
+  systemDiskParticleCount: 1000,
   systemCenterToDiskDistance: 30,
-  systemDiskParticleDistance: 5,
-  systemCenterMass: 100000,
+  systemDiskParticleDistance: 0.5,
+  systemCenterMass: 10000,
   systemParticleMass: 100,
-  screenBorderCleanupRadius: 200, // Pixels
+  screenBorderCleanupRadius: 2000, // Pixels
 };
