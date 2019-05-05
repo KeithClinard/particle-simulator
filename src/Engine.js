@@ -90,7 +90,7 @@ export default class Engine {
     window.particleContainer.addCreated();
   }
 
-  static calculateOrbitalVelocity(planetMass, distance){
+  static calculateOrbitalVelocity(planetMass, distance) {
     return Math.sqrt(planetMass / distance);
   }
 }

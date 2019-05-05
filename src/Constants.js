@@ -14,5 +14,5 @@ export default {
   systemDiskParticleDistance: 0.5,
   systemCenterMass: 10000,
   systemParticleMass: 100,
-  screenBorderCleanupRadius: 2000, // Pixels
+  screenBorderCleanupRadius: 2000 // Pixels
 };

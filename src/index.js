@@ -2,7 +2,6 @@ import * as PIXI from "pixi.js";
 import ParticleContainer from "./ParticleContainer";
 import Controller from "./Controller";
 import Engine from "./Engine";
-import Constants from "./Constants";
 
 function startApp() {
   const app = new PIXI.Application({

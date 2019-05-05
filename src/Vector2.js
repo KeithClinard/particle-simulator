@@ -10,6 +10,13 @@ export default class Vector2 {
       magnitude * Math.sin(angle)
     );
   }
+
+  static createFromOrthogonal(angle, magnitude) {
+    return new Vector2(
+      (0 - magnitude) * Math.sin(angle),
+      magnitude * Math.cos(angle)
+    );
+  }
   /*
    *	Vector Math
    */
